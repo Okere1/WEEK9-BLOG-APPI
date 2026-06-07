@@ -22,6 +22,12 @@ const articleSchema = new mongoose.Schema(
   },
 );
 
+// Create text index
+articleSchema.index({
+  title: "text",
+  content: "text",
+});
+
 const Article = mongoose.model("Article", articleSchema);
 
 module.exports = Article;

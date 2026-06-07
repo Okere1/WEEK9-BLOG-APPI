@@ -108,10 +108,41 @@ const deleteArticleById = async (req, res, next) => {
   }
 };
 
+const searchArticles = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+
+    if (!q) {
+      return res.status(400).json({
+        message: "Search keyword is required",
+      });
+    }
+
+    const articles = await Article.find({
+      $text: {
+        $search: q,
+      },
+    }).sort({
+      score: {
+        $meta: "textScore",
+      },
+    });
+
+    res.status(200).json({
+      message: "Articles found successfully",
+      count: articles.length,
+      data: articles,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   postArticle,
   getAllArticles,
   getArticleById,
   updateArticleById,
   deleteArticleById,
+  searchArticles,
 };
