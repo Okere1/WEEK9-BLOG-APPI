@@ -4,7 +4,7 @@ const cors = require("cors");
 const RequestLogger = require("./middlewares/requestLogger");
 const errorHandler = require("./middlewares/errorHandler");
 const ArticleRoutes = require("./routes/article.route");
-const connectDB = require("./config/db");
+const connectDB = require("./database/connectDB");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
