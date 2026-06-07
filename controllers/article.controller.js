@@ -13,9 +13,9 @@ const postArticle = async (req, res, next) => {
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
-    const article = new Article(value);
-    await article.save();
-    res.status(201).json(article);
+    const newArticle = new Article(value);
+    await newArticle.save();
+    res.status(201).json(newArticle);
   } catch (error) {
     next(error);
   }
@@ -41,11 +41,13 @@ const updateArticleById = async (req, res, next) => {
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
-    const article = await Article.findByIdAndUpdate(id, value, { new: true });
-    if (!article) {
+    const updatedArticle = await Article.findByIdAndUpdate(id, value, {
+      new: true,
+    });
+    if (!updatedArticle) {
       return res.status(404).json({ message: "Article not found" });
     }
-    res.status(200).json(article);
+    res.status(200).json(updatedArticle);
   } catch (error) {
     next(error);
   }
@@ -58,8 +60,8 @@ const deleteArticleById = async (req, res, next) => {
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
-    const article = await Article.findByIdAndDelete(id);
-    if (!article) {
+    const deletedArticle = await Article.findByIdAndDelete(id);
+    if (!deletedArticle) {
       return res.status(404).json({ message: "Article not found" });
     }
     res.status(200).json({ message: "Article deleted successfully" });
