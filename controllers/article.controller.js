@@ -21,14 +21,27 @@ const postArticle = async (req, res, next) => {
   }
 };
 
+const getAllArticles = async (req, res, next) => {
+  try {
+    const articles = await Article.find();
+    res.status(200).json(articles);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getArticleById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const article = await Article.findById(id);
     if (!article) {
-      return res.status(404).json({ message: "Article not found" });
+      return res
+        .status(404)
+        .json({ message: `Article with ID ${id} not found` });
     }
-    res.status(200).json(article);
+    res
+      .status(200)
+      .json({ message: "Article retrieved successfully", data: article });
   } catch (error) {
     next(error);
   }
@@ -43,11 +56,16 @@ const updateArticleById = async (req, res, next) => {
     }
     const updatedArticle = await Article.findByIdAndUpdate(id, value, {
       new: true,
+      runValidators: true,
     });
     if (!updatedArticle) {
-      return res.status(404).json({ message: "Article not found" });
+      return res
+        .status(404)
+        .json({ message: `Article with ID ${id} not found` });
     }
-    res.status(200).json(updatedArticle);
+    res
+      .status(200)
+      .json({ message: "Article updated successfully", data: updatedArticle });
   } catch (error) {
     next(error);
   }
@@ -62,9 +80,13 @@ const deleteArticleById = async (req, res, next) => {
     }
     const deletedArticle = await Article.findByIdAndDelete(id);
     if (!deletedArticle) {
-      return res.status(404).json({ message: "Article not found" });
+      return res
+        .status(404)
+        .json({ message: `Article with ID ${id} not found` });
     }
-    res.status(200).json({ message: "Article deleted successfully" });
+    res
+      .status(200)
+      .json({ message: `Article with ID ${id} deleted successfully` });
   } catch (error) {
     next(error);
   }
