@@ -22,9 +22,17 @@ const postArticle = async (req, res, next) => {
 };
 
 const getAllArticles = async (req, res, next) => {
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
   try {
-    const articles = await Article.find();
-    res.status(200).json(articles);
+    const articles = await (await Article.find())
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res
+      .status(200)
+      .json({ message: "Articles retrieved successfully", data: articles });
   } catch (error) {
     next(error);
   }
@@ -50,7 +58,14 @@ const getArticleById = async (req, res, next) => {
 const updateArticleById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { error, value } = articleSchema.validate(req.body);
+
+    const articleUpdateSchema = Joi.object({
+      title: Joi.string().min(5).optional(),
+      content: Joi.string().min(20).optional(),
+      autor: Joi.string().optional().default("Guest"),
+    });
+
+    const { error, value } = articleUpdateSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
@@ -74,10 +89,7 @@ const updateArticleById = async (req, res, next) => {
 const deleteArticleById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { error, value } = articleSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+
     const deletedArticle = await Article.findByIdAndDelete(id);
     if (!deletedArticle) {
       return res
@@ -90,4 +102,12 @@ const deleteArticleById = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  postArticle,
+  getAllArticles,
+  getArticleById,
+  updateArticleById,
+  deleteArticleById,
 };
