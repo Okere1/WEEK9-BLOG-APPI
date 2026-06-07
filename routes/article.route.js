@@ -1,10 +1,11 @@
 const express = require("express");
+
 const {
   postArticle,
   getAllArticles,
   getArticleById,
-  updateArticle,
-  deleteArticle,
+  updateArticleById,
+  deleteArticleById,
 } = require("../controllers/article.controller");
 
 const router = express.Router();
@@ -12,7 +13,7 @@ const router = express.Router();
 router.post("/articles", postArticle);
 router.get("/articles", getAllArticles);
 router.get("/articles/:id", getArticleById);
-router.put("/articles/:id", updateArticle);
-router.delete("/articles/:id", deleteArticle);
+router.put("/articles/:id", updateArticleById);
+router.delete("/articles/:id", deleteArticleById);
 
 module.exports = router;
