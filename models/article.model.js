@@ -1,3 +1,4 @@
+const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const articleSchema = new mongoose.Schema(
@@ -12,9 +13,10 @@ const articleSchema = new mongoose.Schema(
       required: true,
       minlength: 20,
     },
-    autor: {
-      type: String,
-      default: "Guest",
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   {
