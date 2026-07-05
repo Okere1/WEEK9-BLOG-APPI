@@ -9,10 +9,6 @@ const articleSchema = Joi.object({
 
 const postArticle = async (req, res, next) => {
   try {
-    const { error, value } = articleSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
     const newArticle = new Article({
       title: req.body.title,
       content: req.body.content,
@@ -68,19 +64,6 @@ const updateArticleById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const articleUpdateSchema = Joi.object({
-      title: Joi.string().min(5).optional(),
-      content: Joi.string().min(20).optional(),
-    });
-
-    const { error, value } = articleUpdateSchema.validate(req.body);
-
-    if (error) {
-      return res.status(400).json({
-        message: error.details[0].message,
-      });
-    }
-
     // Find article first
     const article = await Article.findById(id);
 
@@ -112,7 +95,6 @@ const updateArticleById = async (req, res, next) => {
   }
 };
 
-
 const deleteArticleById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -133,9 +115,9 @@ const deleteArticleById = async (req, res, next) => {
 
 const searchArticles = async (req, res, next) => {
   try {
-    const { q } = req.query;
+    const { find } = req.query;
 
-    if (!q) {
+    if (!find) {
       return res.status(400).json({
         message: "Search keyword is required",
       });
@@ -143,7 +125,7 @@ const searchArticles = async (req, res, next) => {
 
     const articles = await Article.find({
       $text: {
-        $search: q,
+        $search: find,
       },
     }).sort({
       score: {

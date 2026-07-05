@@ -2,22 +2,11 @@ const UserModel = require("../models/user.model");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { hashPassword } = require("../utils/bcrypt");
+const { JWT_SECRET } = require("../config/env");
 
 const registerUser = async (req, res, next) => {
   try {
-    const registerSchema = Joi.object({
-      name: Joi.string().min(2).required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
-    });
-
-    const { error } = registerSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({
-        message: error.details[0].message,
-      });
-    }
-
     const { name, email, password } = req.body;
 
     const existingUser = await UserModel.findOne({ email: email });
@@ -25,8 +14,8 @@ const registerUser = async (req, res, next) => {
     if (existingUser) {
       return res.status(400).json({ message: "User already exist" });
     }
-    const salt = await bcrypt.genSalt(12);
-    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const hashedPassword = await hashPassword(password);
 
     const newUser = new UserModel({
       name,
@@ -44,16 +33,6 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
-    const loginSchema = Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
-    });
-
-    const { error } = loginSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email: email });
 
@@ -68,7 +47,7 @@ const loginUser = async (req, res, next) => {
 
     const token = jwt.sign(
       { userId: user._id, name: user.name }, // payload
-      process.env.JWT_SECRET, // secret
+      JWT_SECRET, // secret
       { expiresIn: "7d" },
     );
 

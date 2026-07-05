@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/user.model");
+const { JWT_SECRET } = require("../config/env");
 
 const requreAuth = async (req, res, next) => {
   const authHeader = req.header("Authorization");
@@ -11,7 +12,7 @@ const requreAuth = async (req, res, next) => {
   const token = authHeader.replace("Bearer ", "");
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET);
 
     const user = await UserModel.findById(payload.userId);
     if (!user) {
