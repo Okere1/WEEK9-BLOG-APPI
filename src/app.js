@@ -6,12 +6,24 @@ const errorHandler = require("./middlewares/errorHandler");
 const ArticleRoutes = require("./routes/article.route");
 const UserRoutes = require("./routes/user.route");
 const upload = require("./middlewares/upload");
+const env = require("./config/env");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors("*"));
 app.use(RequestLogger);
+
+app.get("/api/v1/health", (req, res, next) => {
+  return res.status(200).json({
+    message: "Blog Application API is running",
+    data: {
+      status: "OK",
+      version: "v1",
+      port: env.PORT,
+    },
+  });
+});
 
 app.use("/api", ArticleRoutes);
 app.use("/api/users", UserRoutes);

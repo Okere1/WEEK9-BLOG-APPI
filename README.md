@@ -52,7 +52,7 @@ dotenv
 ⚙️ Installation
 
 Clone the repository
-git clone https://github.com/yourusername/blog-api.git
+git clone https://github.com/Okere1/WEEK9-BLOG-APPI
 
 Move into the project
 cd blog-api
