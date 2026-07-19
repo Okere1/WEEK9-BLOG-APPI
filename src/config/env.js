@@ -7,7 +7,7 @@ requiredEnvVars.forEach((envVar) => {
     console.error(`Missing required environment variable: ${envVar}`);
     process.exit(1);
   }
-});
+}); 
 
 module.exports = {
   PORT: process.env.PORT,
