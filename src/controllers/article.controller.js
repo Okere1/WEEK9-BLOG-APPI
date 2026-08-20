@@ -41,7 +41,7 @@ const getAllArticles = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}; 
 
 const getArticleById = async (req, res, next) => {
   try {

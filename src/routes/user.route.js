@@ -12,3 +12,4 @@ router.post("/sign-up", validate(registerSchema), registerUser);
 router.post("/login", validate(loginSchema), loginUser);
 
 module.exports = router;
+ 

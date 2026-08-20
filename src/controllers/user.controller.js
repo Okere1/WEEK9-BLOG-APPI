@@ -16,7 +16,7 @@ const registerUser = async (req, res, next) => {
     }
 
     const hashedPassword = await hashPassword(password);
-
+ 
     const newUser = new UserModel({
       name,
       email,

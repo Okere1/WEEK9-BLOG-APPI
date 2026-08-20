@@ -1,5 +1,6 @@
 const express = require("express");
 const validate = require("../middlewares/validateSchema");
+const requireAuth = require("../middlewares/requireAuth");
 
 const {
   createArticleSchema,
@@ -14,9 +15,8 @@ const {
   deleteArticleById,
   searchArticles,
 } = require("../controllers/article.controller");
-const requireAuth = require("../middlewares/requireAuth");
 
-const router = express.Router(); 
+const router = express.Router();
 
 router.use(requireAuth);
 
